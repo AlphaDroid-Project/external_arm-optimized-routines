@@ -11,7 +11,6 @@ set -eu
 # cd to bin directory.
 cd "${0%/*}"
 
-rmodes='n'
 flags="${ULPFLAGS:--q}"
 emu="$@"
 
@@ -22,20 +21,14 @@ FAIL=0
 PASS=0
 
 t() {
-	[ $r = "n" ] && Lt=$L || Lt=$Ldir
-	$emu ./ulp -r $r -e $Lt $flags "$@" && PASS=$((PASS+1)) || FAIL=$((FAIL+1))
+	$emu ./ulp -e $L $flags "$@" && PASS=$((PASS+1)) || FAIL=$((FAIL+1))
 }
 
 check() {
 	$emu ./ulp -f -q "$@" #>/dev/null
 }
 
-Ldir=0.5
-for r in $rmodes
-do
-
 L=0.6
-Ldir=0.9
 t erff  0      0xffff0000 10000
 t erff  0x1p-127  0x1p-26 40000
 t erff -0x1p-127 -0x1p-26 40000
@@ -44,7 +37,6 @@ t erff -0x1p-26  -0x1p3   40000
 t erff  0         inf     40000
 
 L=0.30
-Ldir=
 t log10f  0      0xffff0000 10000
 t log10f  0x1p-127  0x1p-26 50000
 t log10f  0x1p-26   0x1p3   50000
@@ -52,7 +44,6 @@ t log10f  0x1p-4    0x1p4   50000
 t log10f  0         inf     50000
 
 L=1.11
-Ldir=
 t log10  0 0xffff000000000000 10000
 t log10  0x1p-4    0x1p4      40000
 t log10  0         inf        40000
@@ -64,7 +55,6 @@ t erfc -0x1p-1022 -0x1p-26   40000
 t erfc  0x1p-26    0x1p5     40000
 t erfc -0x1p-26   -0x1p3     40000
 t erfc  0          inf       40000
-Ldir=0.5
 
 L=1.5
 t erfcf  0      0xffff0000 10000
@@ -128,7 +118,6 @@ t log1pf   -0.001     -1.0  50000
 t log1pf     -1.0      inf   5000
 
 L=2.80
-Ldir=
 t tanf  0      0xffff0000 10000
 t tanf  0x1p-127  0x1p-14 50000
 t tanf -0x1p-127 -0x1p-14 50000
@@ -215,11 +204,15 @@ L=1.03
 t cbrtf  0  inf 1000000
 t cbrtf -0 -inf 1000000
 
-done
+L=2.09
+t tanhf  0              0x1p-23       1000
+t tanhf -0             -0x1p-23       1000
+t tanhf  0x1p-23        0x1.205966p+3 100000
+t tanhf -0x1p-23       -0x1.205966p+3 100000
+t tanhf  0x1.205966p+3  inf           100
+t tanhf -0x1.205966p+3 -inf           100
 
 # vector functions
-Ldir=0.5
-r='n'
 flags="${ULPFLAGS:--q}"
 runs=
 check __s_log10f 1 && runs=1
@@ -461,6 +454,15 @@ range_asinh='
  -0x1p511 -inf     40000
 '
 
+range_tanhf='
+  0              0x1p-23       1000
+ -0             -0x1p-23       1000
+  0x1p-23        0x1.205966p+3 100000
+ -0x1p-23       -0x1.205966p+3 100000
+  0x1.205966p+3  inf           100
+ -0x1.205966p+3 -inf           100
+'
+
 range_sve_cosf='
  0    0xffff0000    10000
  0x1p-4    0x1p4    500000
@@ -629,6 +631,7 @@ L_cosh=1.43
 L_atanhf=2.59
 L_cbrtf=1.03
 L_asinh=1.54
+L_tanhf=2.09
 
 L_sve_cosf=1.57
 L_sve_cos=1.61
@@ -748,10 +751,10 @@ log1pf __s_log1pf      $runs
 log1pf __v_log1pf      $runv
 log1pf __vn_log1pf     $runvn
 log1pf _ZGVnN4v_log1pf $runvn
-asinhf __s_asinhf      $runs
-asinhf __v_asinhf      $runv
-asinhf __vn_asinhf     $runvn
-asinhf _ZGVnN4v_asinhf $runvn
+asinhf __s_asinhf      $runs    fenv
+asinhf __v_asinhf      $runv    fenv
+asinhf __vn_asinhf     $runvn   fenv
+asinhf _ZGVnN4v_asinhf $runvn   fenv
 log2f  __s_log2f       $runs
 log2f  __v_log2f       $runv
 log2f  __vn_log2f      $runvn
@@ -786,7 +789,7 @@ cbrtf  __vn_cbrtf      $runvn   fenv
 cbrtf  _ZGVnN4v_cbrtf  $runvn   fenv
 asinh  __s_asinh       $runs    fenv
 # Test vector asinh 3 times, with control lane < 1, > 1 and special.
-#  Ensures the v_sel is choosing the right option in all cases.
+# Ensures the v_sel is choosing the right option in all cases.
 asinh  __v_asinh       $runv    fenv -c 0.5
 asinh  __vn_asinh      $runvn   fenv -c 0.5
 asinh  _ZGVnN2v_asinh  $runvn   fenv -c 0.5
@@ -796,6 +799,10 @@ asinh  _ZGVnN2v_asinh  $runvn   fenv -c 2
 asinh  __v_asinh       $runv    fenv -c 0x1p600
 asinh  __vn_asinh      $runvn   fenv -c 0x1p600
 asinh  _ZGVnN2v_asinh  $runvn   fenv -c 0x1p600
+tanhf  __s_tanhf       $runs    fenv
+tanhf  __v_tanhf       $runv    fenv
+tanhf  __vn_tanhf      $runvn   fenv
+tanhf  _ZGVnN4v_tanhf  $runvn   fenv
 
 sve_cosf     __sv_cosf         $runsv
 sve_cosf     _ZGVsMxv_cosf     $runsv
