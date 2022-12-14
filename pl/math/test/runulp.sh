@@ -640,7 +640,7 @@ L_sve_sin=2.03
 L_sve_atanf=2.9
 L_sve_atan=1.78
 L_sve_atan2f=2.45
-L_sve_atan2=1.73
+L_sve_atan2=1.78
 L_sve_log10=1.97
 L_sve_log10f=2.82
 L_sve_logf=2.85
@@ -747,26 +747,26 @@ log10f __s_log10f      $runs
 log10f __v_log10f      $runv
 log10f __vn_log10f     $runvn
 log10f _ZGVnN4v_log10f $runvn
-log1pf __s_log1pf      $runs
-log1pf __v_log1pf      $runv
-log1pf __vn_log1pf     $runvn
-log1pf _ZGVnN4v_log1pf $runvn
+log1pf __s_log1pf      $runs    fenv
+log1pf __v_log1pf      $runv    fenv
+log1pf __vn_log1pf     $runvn   fenv
+log1pf _ZGVnN4v_log1pf $runvn   fenv
 asinhf __s_asinhf      $runs    fenv
 asinhf __v_asinhf      $runv    fenv
 asinhf __vn_asinhf     $runvn   fenv
 asinhf _ZGVnN4v_asinhf $runvn   fenv
-log2f  __s_log2f       $runs
-log2f  __v_log2f       $runv
-log2f  __vn_log2f      $runvn
-log2f  _ZGVnN4v_log2f  $runvn
-tanf  __s_tanf         $runs
-tanf  __v_tanf         $runv
-tanf  __vn_tanf        $runvn
-tanf  _ZGVnN4v_tanf    $runvn
-log1p  __s_log1p       $runs
-log1p  __v_log1p       $runv
-log1p  __vn_log1p      $runvn
-log1p  _ZGVnN2v_log1p  $runvn
+log2f  __s_log2f       $runs    fenv
+log2f  __v_log2f       $runv    fenv
+log2f  __vn_log2f      $runvn   fenv
+log2f  _ZGVnN4v_log2f  $runvn   fenv
+tanf  __s_tanf         $runs    fenv
+tanf  __v_tanf         $runv    fenv
+tanf  __vn_tanf        $runvn   fenv
+tanf  _ZGVnN4v_tanf    $runvn   fenv
+log1p  __s_log1p       $runs    fenv
+log1p  __v_log1p       $runv    fenv
+log1p  __vn_log1p      $runvn   fenv
+log1p  _ZGVnN2v_log1p  $runvn   fenv
 expm1f __s_expm1f      $runs    fenv
 expm1f __v_expm1f      $runv    fenv
 expm1f __vn_expm1f     $runvn   fenv
