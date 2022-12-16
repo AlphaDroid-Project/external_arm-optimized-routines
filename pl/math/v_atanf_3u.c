@@ -6,6 +6,9 @@
  */
 
 #include "v_math.h"
+#include "pl_sig.h"
+#include "pl_test.h"
+
 #if V_SUPPORTED
 
 #include "atanf_common.h"
@@ -46,4 +49,12 @@ v_f32_t V_NAME (atanf) (v_f32_t x)
   return y;
 }
 VPCS_ALIAS
+
+PL_SIG (V, F, 1, atan, -10.0, 10.0)
+PL_TEST_ULP (V_NAME (atanf), 2.5)
+PL_TEST_INTERVAL (V_NAME (atanf), -10.0, 10.0, 50000)
+PL_TEST_INTERVAL (V_NAME (atanf), -1.0, 1.0, 40000)
+PL_TEST_INTERVAL (V_NAME (atanf), 0.0, 1.0, 40000)
+PL_TEST_INTERVAL (V_NAME (atanf), 1.0, 100.0, 40000)
+PL_TEST_INTERVAL (V_NAME (atanf), 1e6, 1e32, 40000)
 #endif

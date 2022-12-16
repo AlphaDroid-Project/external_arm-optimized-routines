@@ -5,8 +5,11 @@
  * SPDX-License-Identifier: MIT OR Apache-2.0 WITH LLVM-exception
  */
 
-#include "math_config.h"
 #include "v_math.h"
+#include "math_config.h"
+#include "pl_sig.h"
+#include "pl_test.h"
+
 #if V_SUPPORTED
 
 #define N (1 << V_LOG2F_TABLE_BITS)
@@ -116,4 +119,14 @@ VPCS_ATTR v_f32_t V_NAME (log2f) (v_f32_t x)
   return y;
 }
 VPCS_ALIAS
+
+PL_SIG (V, F, 1, log2, 0.01, 11.1)
+PL_TEST_ULP (V_NAME (log2f), 2.10)
+PL_TEST_EXPECT_FENV (V_NAME (log2f), WANT_ERRNO)
+PL_TEST_INTERVAL (V_NAME (log2f), -0.0, -0x1p126, 100)
+PL_TEST_INTERVAL (V_NAME (log2f), 0x1p-149, 0x1p-126, 4000)
+PL_TEST_INTERVAL (V_NAME (log2f), 0x1p-126, 0x1p-23, 50000)
+PL_TEST_INTERVAL (V_NAME (log2f), 0x1p-23, 1.0, 50000)
+PL_TEST_INTERVAL (V_NAME (log2f), 1.0, 100, 50000)
+PL_TEST_INTERVAL (V_NAME (log2f), 100, inf, 50000)
 #endif

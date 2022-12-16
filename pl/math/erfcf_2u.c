@@ -7,6 +7,8 @@
 
 #include "erfcf.h"
 #include "math_config.h"
+#include "pl_sig.h"
+#include "pl_test.h"
 
 #define P(i) __erfcf_poly_data.poly[i]
 
@@ -120,3 +122,12 @@ erfcf (float x)
     }
   return __math_uflowf (0);
 }
+
+PL_SIG (S, F, 1, erfc, -4.0, 10.0)
+PL_TEST_ULP (erfcf, 1.5)
+PL_TEST_INTERVAL (erfcf, 0, 0xffff0000, 10000)
+PL_TEST_INTERVAL (erfcf, 0x1p-127, 0x1p-26, 40000)
+PL_TEST_INTERVAL (erfcf, -0x1p-127, -0x1p-26, 40000)
+PL_TEST_INTERVAL (erfcf, 0x1p-26, 0x1p5, 40000)
+PL_TEST_INTERVAL (erfcf, -0x1p-26, -0x1p3, 40000)
+PL_TEST_INTERVAL (erfcf, 0, inf, 40000)

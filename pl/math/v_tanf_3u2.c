@@ -7,6 +7,8 @@
 
 #include "v_math.h"
 #include "estrinf.h"
+#include "pl_sig.h"
+#include "pl_test.h"
 
 #if V_SUPPORTED
 
@@ -114,4 +116,16 @@ v_f32_t V_NAME (tanf) (v_f32_t x)
   return y;
 }
 VPCS_ALIAS
+
+PL_SIG (V, F, 1, tan, -3.1, 3.1)
+PL_TEST_ULP (V_NAME (tanf), 2.7)
+PL_TEST_EXPECT_FENV (V_NAME (tanf), WANT_ERRNO)
+PL_TEST_INTERVAL (V_NAME (tanf), -0.0, -0x1p126, 100)
+PL_TEST_INTERVAL (V_NAME (tanf), 0x1p-149, 0x1p-126, 4000)
+PL_TEST_INTERVAL (V_NAME (tanf), 0x1p-126, 0x1p-23, 50000)
+PL_TEST_INTERVAL (V_NAME (tanf), 0x1p-23, 0.7, 50000)
+PL_TEST_INTERVAL (V_NAME (tanf), 0.7, 1.5, 50000)
+PL_TEST_INTERVAL (V_NAME (tanf), 1.5, 100, 50000)
+PL_TEST_INTERVAL (V_NAME (tanf), 100, 0x1p17, 50000)
+PL_TEST_INTERVAL (V_NAME (tanf), 0x1p17, inf, 50000)
 #endif

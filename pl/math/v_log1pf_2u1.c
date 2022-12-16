@@ -5,6 +5,9 @@
  */
 
 #include "v_math.h"
+#include "pl_sig.h"
+#include "pl_test.h"
+
 #if V_SUPPORTED
 
 #define AbsMask 0x7fffffff
@@ -142,4 +145,15 @@ VPCS_ATTR v_f32_t V_NAME (log1pf) (v_f32_t x)
 }
 VPCS_ALIAS
 
+PL_SIG (V, F, 1, log1p, -0.9, 10.0)
+PL_TEST_ULP (V_NAME (log1pf), 1.53)
+PL_TEST_EXPECT_FENV (V_NAME (log1pf), WANT_ERRNO)
+PL_TEST_INTERVAL (V_NAME (log1pf), -10.0, 10.0, 10000)
+PL_TEST_INTERVAL (V_NAME (log1pf), 0.0, 0x1p-23, 30000)
+PL_TEST_INTERVAL (V_NAME (log1pf), 0x1p-23, 0.001, 50000)
+PL_TEST_INTERVAL (V_NAME (log1pf), 0.001, 1.0, 50000)
+PL_TEST_INTERVAL (V_NAME (log1pf), 0.0, -0x1p-23, 30000)
+PL_TEST_INTERVAL (V_NAME (log1pf), -0x1p-23, -0.001, 30000)
+PL_TEST_INTERVAL (V_NAME (log1pf), -0.001, -1.0, 50000)
+PL_TEST_INTERVAL (V_NAME (log1pf), -1.0, inf, 1000)
 #endif

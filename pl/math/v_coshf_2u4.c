@@ -6,6 +6,8 @@
 
 #include "v_math.h"
 #include "mathlib.h"
+#include "pl_sig.h"
+#include "pl_test.h"
 
 #define AbsMask 0x7fffffff
 #define TinyBound 0x20000000 /* 0x1p-63: Round to 1 below this.  */
@@ -59,4 +61,13 @@ VPCS_ATTR v_f32_t V_NAME (coshf) (v_f32_t x)
 }
 VPCS_ALIAS
 
+PL_SIG (V, F, 1, cosh, -10.0, 10.0)
+PL_TEST_ULP (V_NAME (coshf), 1.89)
+PL_TEST_EXPECT_FENV (V_NAME (coshf), WANT_ERRNO)
+PL_TEST_INTERVAL (V_NAME (coshf), 0, 0x1p-63, 100)
+PL_TEST_INTERVAL (V_NAME (coshf), 0, 0x1.5a92d8p+6, 80000)
+PL_TEST_INTERVAL (V_NAME (coshf), 0x1.5a92d8p+6, inf, 2000)
+PL_TEST_INTERVAL (V_NAME (coshf), -0, -0x1p-63, 100)
+PL_TEST_INTERVAL (V_NAME (coshf), -0, -0x1.5a92d8p+6, 80000)
+PL_TEST_INTERVAL (V_NAME (coshf), -0x1.5a92d8p+6, -inf, 2000)
 #endif

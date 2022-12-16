@@ -6,6 +6,8 @@
  */
 
 #include "v_math.h"
+#include "pl_sig.h"
+#include "pl_test.h"
 
 #if V_SUPPORTED
 
@@ -81,4 +83,12 @@ v_f32_t V_NAME (expm1f) (v_f32_t x)
   return y;
 }
 VPCS_ALIAS
+
+PL_SIG (V, F, 1, expm1, -9.9, 9.9)
+PL_TEST_ULP (V_NAME (expm1f), 1.02)
+PL_TEST_EXPECT_FENV (V_NAME (expm1f), WANT_ERRNO)
+PL_TEST_INTERVAL (V_NAME (expm1f), 0, 0x1p-23, 1000)
+PL_TEST_INTERVAL (V_NAME (expm1f), -0, -0x1p-23, 1000)
+PL_TEST_INTERVAL (V_NAME (expm1f), 0x1p-23, 0x1.644716p6, 1000000)
+PL_TEST_INTERVAL (V_NAME (expm1f), -0x1p-23, -0x1.9bbabcp+6, 1000000)
 #endif

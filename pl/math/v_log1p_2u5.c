@@ -5,9 +5,11 @@
  */
 
 #include "v_math.h"
-#if V_SUPPORTED
-
 #include "estrin.h"
+#include "pl_sig.h"
+#include "pl_test.h"
+
+#if V_SUPPORTED
 
 #define Ln2Hi v_f64 (0x1.62e42fefa3800p-1)
 #define Ln2Lo v_f64 (0x1.ef35793c76730p-45)
@@ -101,7 +103,17 @@ VPCS_ATTR v_f64_t V_NAME (log1p) (v_f64_t x)
 
   return y;
 }
-
 VPCS_ALIAS
 
+PL_SIG (V, D, 1, log1p, -0.9, 10.0)
+PL_TEST_ULP (V_NAME (log1p), 1.97)
+PL_TEST_EXPECT_FENV (V_NAME (log1p), WANT_ERRNO)
+PL_TEST_INTERVAL (V_NAME (log1p), -10.0, 10.0, 10000)
+PL_TEST_INTERVAL (V_NAME (log1p), 0.0, 0x1p-23, 50000)
+PL_TEST_INTERVAL (V_NAME (log1p), 0x1p-23, 0.001, 50000)
+PL_TEST_INTERVAL (V_NAME (log1p), 0.001, 1.0, 50000)
+PL_TEST_INTERVAL (V_NAME (log1p), 0.0, -0x1p-23, 50000)
+PL_TEST_INTERVAL (V_NAME (log1p), -0x1p-23, -0.001, 50000)
+PL_TEST_INTERVAL (V_NAME (log1p), -0.001, -1.0, 50000)
+PL_TEST_INTERVAL (V_NAME (log1p), -1.0, inf, 5000)
 #endif

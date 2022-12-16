@@ -6,6 +6,8 @@
 
 #include "v_math.h"
 #include "mathlib.h"
+#include "pl_sig.h"
+#include "pl_test.h"
 
 #if V_SUPPORTED
 
@@ -85,4 +87,9 @@ VPCS_ATTR v_f32_t V_NAME (cbrtf) (v_f32_t x)
 }
 VPCS_ALIAS
 
+PL_SIG (V, F, 1, cbrt, -10.0, 10.0)
+PL_TEST_ULP (V_NAME (cbrtf), 1.03)
+PL_TEST_EXPECT_FENV (V_NAME (cbrtf), WANT_ERRNO)
+PL_TEST_INTERVAL (V_NAME (cbrtf), 0, inf, 1000000)
+PL_TEST_INTERVAL (V_NAME (cbrtf), -0, -inf, 1000000)
 #endif

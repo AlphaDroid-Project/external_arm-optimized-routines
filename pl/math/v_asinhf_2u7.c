@@ -6,6 +6,8 @@
 
 #include "v_math.h"
 #include "include/mathlib.h"
+#include "pl_sig.h"
+#include "pl_test.h"
 
 #if V_SUPPORTED
 
@@ -53,4 +55,15 @@ VPCS_ATTR v_f32_t V_NAME (asinhf) (v_f32_t x)
 }
 VPCS_ALIAS
 
+PL_SIG (V, F, 1, asinh, -10.0, 10.0)
+PL_TEST_ULP (V_NAME (asinhf), 2.17)
+PL_TEST_EXPECT_FENV (V_NAME (asinhf), WANT_ERRNO)
+PL_TEST_INTERVAL (V_NAME (asinhf), 0, 0x1p-12, 40000)
+PL_TEST_INTERVAL (V_NAME (asinhf), 0x1p-12, 1.0, 40000)
+PL_TEST_INTERVAL (V_NAME (asinhf), 1.0, 0x1p11, 40000)
+PL_TEST_INTERVAL (V_NAME (asinhf), 0x1p11, inf, 40000)
+PL_TEST_INTERVAL (V_NAME (asinhf), 0, -0x1p-12, 20000)
+PL_TEST_INTERVAL (V_NAME (asinhf), -0x1p-12, -1.0, 20000)
+PL_TEST_INTERVAL (V_NAME (asinhf), -1.0, -0x1p11, 20000)
+PL_TEST_INTERVAL (V_NAME (asinhf), -0x1p11, -inf, 20000)
 #endif

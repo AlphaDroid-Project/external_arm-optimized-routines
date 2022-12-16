@@ -5,8 +5,10 @@
  */
 
 #include "v_math.h"
-#include "mathlib.h"
 #include "estrinf.h"
+#include "mathlib.h"
+#include "pl_sig.h"
+#include "pl_test.h"
 
 #if V_SUPPORTED
 
@@ -88,4 +90,13 @@ VPCS_ATTR v_f32_t V_NAME (tanhf) (v_f32_t x)
 }
 VPCS_ALIAS
 
+PL_SIG (V, F, 1, tanh, -10.0, 10.0)
+PL_TEST_ULP (V_NAME (tanhf), 2.09)
+PL_TEST_EXPECT_FENV (V_NAME (tanhf), WANT_ERRNO)
+PL_TEST_INTERVAL (V_NAME (tanhf), 0, 0x1p-23, 1000)
+PL_TEST_INTERVAL (V_NAME (tanhf), -0, -0x1p-23, 1000)
+PL_TEST_INTERVAL (V_NAME (tanhf), 0x1p-23, 0x1.205966p+3, 100000)
+PL_TEST_INTERVAL (V_NAME (tanhf), -0x1p-23, -0x1.205966p+3, 100000)
+PL_TEST_INTERVAL (V_NAME (tanhf), 0x1.205966p+3, inf, 100)
+PL_TEST_INTERVAL (V_NAME (tanhf), -0x1.205966p+3, -inf, 100)
 #endif

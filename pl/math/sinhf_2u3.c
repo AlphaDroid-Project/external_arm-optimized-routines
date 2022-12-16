@@ -6,6 +6,8 @@
  */
 
 #include "math_config.h"
+#include "pl_sig.h"
+#include "pl_test.h"
 
 #define AbsMask 0x7fffffff
 #define Half 0x3f000000
@@ -63,3 +65,12 @@ sinhf (float x)
 		    (t + t / (t + 1)) / -2  for x < 0.  */
   return (t + t / (t + 1)) * halfsign;
 }
+
+PL_SIG (S, F, 1, sinh, -10.0, 10.0)
+PL_TEST_ULP (sinhf, 1.76)
+PL_TEST_INTERVAL (sinhf, 0, 0x1.62e43p+6, 100000)
+PL_TEST_INTERVAL (sinhf, -0, -0x1.62e43p+6, 100000)
+PL_TEST_INTERVAL (sinhf, 0x1.62e43p+6, 0x1.65a9fap+6, 100)
+PL_TEST_INTERVAL (sinhf, -0x1.62e43p+6, -0x1.65a9fap+6, 100)
+PL_TEST_INTERVAL (sinhf, 0x1.65a9fap+6, inf, 100)
+PL_TEST_INTERVAL (sinhf, -0x1.65a9fap+6, -inf, 100)
