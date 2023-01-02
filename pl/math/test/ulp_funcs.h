@@ -4,94 +4,63 @@
  * Copyright (c) 2022, Arm Limited.
  * SPDX-License-Identifier: MIT OR Apache-2.0 WITH LLVM-exception
  */
-F1 (asinh)
-F2 (atan2)
-F1 (erfc)
-F1 (erf)
-F1 (log10)
-F1 (log1p)
-D1 (asinh)
-D2 (atan2)
-F1 (tan)
-D1 (erfc)
-D1 (log10)
-D1 (log1p)
-#if WANT_VMATH
-SF1 (asinh)
-SF1 (atan)
-SD1 (atan)
-SF2 (atan2)
-SD2 (atan2)
-SF1 (erf)
-SD1 (erf)
-SF1 (erfc)
-SD1 (erfc)
-SF1 (log10)
-SD1 (log10)
-SF1 (log1p)
-SF1 (log2)
-SD1 (log2)
-SF1 (tan)
-#if __aarch64__
-VF1 (asinh)
-VF1 (atan)
-VD1 (atan)
-VF2 (atan2)
-VD2 (atan2)
-VF1 (erf)
-VD1 (erf)
-VF1 (erfc)
-VD1 (erfc)
-VF1 (log10)
-VD1 (log10)
-VF1 (log1p)
-VF1 (log2)
-VD1 (log2)
-VF1 (tan)
+
 #ifdef __vpcs
-ZVNF1 (asinh)
-ZVNF1 (atan)
-ZVND1 (atan)
-ZVNF2 (atan2)
-ZVND2 (atan2)
-ZVNF1 (erf)
-ZVND1 (erf)
-ZVNF1 (erfc)
-ZVND1 (erfc)
-ZVNF1 (log10)
-ZVND1 (log10)
-ZVNF1 (log1p)
-ZVNF1 (log2)
-ZVND1 (log2)
-ZVNF1 (tan)
+
+#define _ZVF1(f) SF1 (f) VF1 (f) ZVNF1 (f)
+#define _ZVD1(f) SD1 (f) VD1 (f) ZVND1 (f)
+#define _ZVF2(f) SF2 (f) VF2 (f) ZVNF2 (f)
+#define _ZVD2(f) SD2 (f) VD2 (f) ZVND2 (f)
+
+#elif __aarch64
+
+#define _ZVF1(f) SF1 (f) VF1 (f)
+#define _ZVD1(f) SD1 (f) VD1 (f)
+#define _ZVF2(f) SF2 (f) VF2 (f)
+#define _ZVD2(f) SD2 (f) VD2 (f)
+
+#elif WANT_VMATH
+
+#define _ZVF1(f) SF1 (f)
+#define _ZVD1(f) SD1 (f)
+#define _ZVF2(f) SF2 (f)
+#define _ZVD2(f) SD2 (f)
+
+#else
+
+#define _ZVF1(f)
+#define _ZVD1(f)
+#define _ZVF2(f)
+#define _ZVD2(f)
+
 #endif
-#endif
+
 #if WANT_SVE_MATH
-SVF2 (atan2)
-ZSVF2 (atan2)
-SVD2 (atan2)
-ZSVD2 (atan2)
-SVF1 (atan)
-ZSVF1 (atan)
-SVD1 (atan)
-ZSVD1 (atan)
-SVF1 (cos)
-ZSVF1 (cos)
-SVD1 (cos)
-ZSVD1 (cos)
-SVF1 (exp)
-ZSVF1 (exp)
-SVF1 (log)
-ZSVF1 (log)
-SVD1 (log)
-ZSVD1 (log)
-SVF1 (log10)
-ZSVF1 (log10)
-SVD1 (log10)
-ZSVD1 (log10)
-SVF1 (sin)
-ZSVF1 (sin)
-SVD1 (sin)
-ZSVD1 (sin)
+
+#define _ZSVF1(f) SVF1 (f) ZSVF1 (f)
+#define _ZSVF2(f) SVF2 (f) ZSVF2 (f)
+#define _ZSVD1(f) SVD1 (f) ZSVD1 (f)
+#define _ZSVD2(f) SVD2 (f) ZSVD2 (f)
+
+#else
+
+#define _ZSVF1(f)
+#define _ZSVF2(f)
+#define _ZSVD1(f)
+#define _ZSVD2(f)
+
 #endif
+
+#define _ZSF1(f) F1 (f)
+#define _ZSF2(f) F2 (f)
+#define _ZSD1(f) D1 (f)
+#define _ZSD2(f) D2 (f)
+
+#include "ulp_funcs_gen.h"
+
+#if WANT_SVE_MATH
+F (__sv_powi, sv_powi, ref_powi, mpfr_powi, 2, 0, d2, 0)
+F (_ZGVsMxvv_powk, Z_sv_powk, ref_powi, mpfr_powi, 2, 0, d2, 0)
+F (__sv_powif, sv_powif, ref_powif, mpfr_powi, 2, 1, f2, 0)
+F (_ZGVsMxvv_powi, Z_sv_powi, ref_powif, mpfr_powi, 2, 1, f2, 0)
 #endif
